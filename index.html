@@ -126,64 +126,70 @@
     const lessons = [
         {
             type: 'info',
-            text: '<b>Módulo: Cauchy-Riemann Nivel Parcial.</b><br>Ya sabemos que si \\( f(z) = u + iv \\) es holomorfa, entonces \\( u_x = v_y \\) y \\( u_y = -v_x \\). Pero en la FCEyN esto se usa para cosas más profundas. ¡Vamos a deducir!',
-            options: ['Arrancar'],
+            text: '<b>Módulo 2: Teorema de los Residuos.</b><br>El teorema dice que si tienes una curva cerrada simple \\( \\gamma \\), la integral de una función holomorfa sobre ella es \\( 2\\pi i \\) por la suma de los "residuos" de las singularidades que quedaron atrapadas adentro.',
+            options: ['¡A integrar!'],
             correct: 0,
-            feedback: 'Asegurate de tener papel y lápiz a mano para estos.'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Armónicas Conjugadas:</b> Sea \\( u(x,y) = x^3 - 3xy^2 \\). Sabemos que es la parte real de una función entera \\( f(z) = u + iv \\). Usando Cauchy-Riemann, ¿cuál de las siguientes es su armónica conjugada \\( v(x,y) \\)?',
-            options: [
-                '\\( v(x,y) = -3x^2y + y^3 + C \\)',
-                '\\( v(x,y) = 3x^2y - y^3 + C \\)',
-                '\\( v(x,y) = 3x^2y + y^3 + C \\)'
-            ],
-            correct: 1,
-            feedback: '¡Exacto! Como \\( u_x = 3x^2 - 3y^2 = v_y \\), integrando respecto a \\( y \\) da \\( v = 3x^2y - y^3 + h(x) \\). Usando la otra ecuación de C-R se deduce que \\( h\'(x) = 0 \\).'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Geometría (Ideal para Data Science):</b> Si escribimos los gradientes como \\( \\nabla u = (u_x, u_y) \\) y \\( \\nabla v = (v_x, v_y) \\). Si \\( f=u+iv \\) es holomorfa y \\( f\'(z) \\neq 0 \\), ¿qué relación geométrica tienen las curvas de nivel de \\( u \\) y \\( v \\)?',
-            options: [
-                'Son siempre paralelas (el producto cruz es cero).',
-                'El ángulo entre ellas depende de \\( z \\).',
-                'Son ortogonales (su producto interno \\( \\nabla u \\cdot \\nabla v = 0 \\)).'
-            ],
-            correct: 2,
-            feedback: '¡Bien! \\( \\nabla u \\cdot \\nabla v = u_x v_x + u_y v_y = u_x(-u_y) + u_y(u_x) = 0 \\). Esto significa que las redes de partes reales e imaginarias forman grillas ortogonales.'
+            feedback: 'El residuo es simplemente el coeficiente \\( a_{-1} \\) del desarrollo de Laurent alrededor de la singularidad.'
         },
         {
             type: 'info',
-            text: '<br>Visualmente, si mapeas las curvas donde \\( u=cte \\) y \\( v=cte \\), siempre se cruzan a 90 grados. Esta propiedad preservadora de ángulos se llama <b>Mapeo Conforme</b> y es brutal para transformar dominios en Machine Learning geométrico.',
-            options: ['Entendido, vamos al ejercicio del parcial'],
+            text: '<b>CONSIGNA DEL SEGUNDO PARCIAL (26/11/2025) - Ejercicio 1:</b><br><br>Sea \\( \\alpha > 0 \\). Calcular la integral impropia:<br><br> \\( \\displaystyle \\int_0^\\infty \\frac{\\operatorname{sen}(x)}{x(x^2 + \\alpha^2)} dx \\)<br><br><i>Sugerencia: Puede ser útil considerar el contorno dado por medio anillo \\( A(0, r, R) \\) en el semiplano superior (incluyendo los bordes) con \\( 0 < r < R \\).</i>',
+            options: ['Leída y anotada'],
             correct: 0,
-            feedback: 'Preparate para aplicar regla de la cadena.'
+            feedback: 'Vamos a desglosar este "monstruo" paso a paso usando variables complejas.'
         },
         {
             type: 'quiz',
-            text: '<b>El Ejercicio 1 de tu Parcial:</b> Tienes \\( f=u+iv \\) holomorfa y \\( \\varphi(u,v) = k \\) (curva de nivel). Te piden probar que \\( f \\) es constante. Al derivar \\( \\varphi(u(x,y), v(x,y)) = k \\) respecto a \\( x \\) e \\( y \\), obtienes: <br> 1) \\( \\varphi_u u_x + \\varphi_v v_x = 0 \\)<br> 2) \\( \\varphi_u u_y + \\varphi_v v_y = 0 \\)<br>¿Cuál es el siguiente paso lógico usando Cauchy-Riemann?',
+            text: '<b>Paso 1: Elegir la función compleja.</b><br>Para integrar senos y cosenos en la recta real usando complejos, NO usamos \\( f(z) = \\frac{\\operatorname{sen}(z)}{z(z^2+\\alpha^2)} \\). En su lugar, usamos \\( f(z) = \\frac{e^{iz}}{z(z^2+\\alpha^2)} \\) y luego tomamos la parte imaginaria. ¿Por qué hacemos esto?',
             options: [
-                'Integrar ambas ecuaciones respecto a \\( x \\) e \\( y \\).',
-                'Reemplazar \\( v_x, v_y \\) por \\( u_x, u_y \\) para armar un sistema homogéneo donde las incógnitas son \\( \\varphi_u, \\varphi_v \\).',
-                'Aplicar el Teorema de Liouville porque la curva está acotada.'
+                'Porque \\( \\operatorname{sen}(z) \\) no es holomorfa en el plano complejo.',
+                'Porque \\( e^{iz} \\) está acotada en el semiplano superior (\\( y > 0 \\)), mientras que \\( \\operatorname{sen}(z) \\) crece exponencialmente.',
+                'Porque \\( e^{iz} \\) no tiene singularidades, simplificando el cálculo de los residuos.'
             ],
             correct: 1,
-            feedback: '¡Clave! Al reemplazar te queda un sistema matricial de 2x2. ¡Vamos a verlo en el siguiente paso!'
+            feedback: '¡Exacto! Como \\( z = x + iy \\), entonces \\( e^{iz} = e^{ix}e^{-y} \\). Si \\( y > 0 \\), el término \\( e^{-y} \\) decae, lo que nos permite usar el Lema de Jordan para que la integral en el arco exterior gigante dé cero. \\( \\operatorname{sen}(z) \\) tiene términos \\( e^{y} \\) que explotan.'
+        },
+        {
+            type: 'info',
+            text: '<b>Paso 2: Visualizar el contorno.</b><br>La sugerencia te pide un medio anillo. . <br>Esto nos da 4 caminos:<br>1. Eje real de \\( -R \\) a \\( -r \\)<br>2. Semicírculo chiquito \\( C_r \\) esquivando el origen (sentido horario)<br>3. Eje real de \\( r \\) a \\( R \\)<br>4. Semicírculo gigante \\( C_R \\) (sentido antihorario).',
+            options: ['Entendido, la suma da el total adentro'],
+            correct: 0,
+            feedback: 'Como \\( R \\to \\infty \\) y \\( r \\to 0 \\), los tramos 1 y 3 formarán nuestra integral impropia de \\( -\\infty \\) a \\( \\infty \\).'
         },
         {
             type: 'quiz',
-            text: '<b>Resolviendo el Parcial (Final):</b> El sistema matricial te queda con matriz de coeficientes \\( A = \\begin{pmatrix} u_x & -u_y \\\\ u_y & u_x \\end{pmatrix} \\) multiplicada por el vector \\( (\\varphi_u, \\varphi_v)^T = (0,0)^T \\). El enunciado dice que \\( \\nabla \\varphi \\neq \\vec{0} \\). ¿Qué implica esto sobre el determinante de \\( A \\)?',
+            text: '<b>Paso 3: Singularidades y Residuos.</b><br>Nuestra función es \\( f(z) = \\frac{e^{iz}}{z(z-i\\alpha)(z+i\\alpha)} \\). Tenemos polos simples en \\( z=0 \\), \\( z=i\\alpha \\) y \\( z=-i\\alpha \\). ¿Cuál de ellos está **adentro** de nuestro contorno en el semiplano superior?',
             options: [
-                'Que el determinante debe ser nulo, es decir \\( (u_x)^2 + (u_y)^2 = 0 \\).',
-                'Que el determinante debe ser distinto de cero.',
-                'Que la traza de la matriz es cero.'
+                'Solo \\( z = 0 \\)',
+                'Solo \\( z = i\\alpha \\)',
+                'Ambos \\( z = 0 \\) y \\( z = i\\alpha \\)'
             ],
-            correct: 0,
-            feedback: '¡Bingo, resolviste el parcial! Si el gradiente de \\( \\varphi \\) no es nulo, el sistema homogéneo tiene solución no trivial. Por Álgebra Lineal (¡que la tenés clarísima!), el determinante de \\( A \\) debe ser 0. Como \\( det(A) = |f\'(z)|^2 \\), entonces \\( f\'(z) = 0 \\) en todo el dominio. Ergo, \\( f \\) es constante. ∎'
+            correct: 1,
+            feedback: '¡Bien! El origen \\( z=0 \\) lo dejamos afuera a propósito esquivándolo con el arco \\( C_r \\). El polo \\( -i\\alpha \\) está en el semiplano inferior. Así que solo nos importa \\( i\\alpha \\).'
+        },
+        {
+            type: 'quiz',
+            text: '<b>Paso 4: Calcular el residuo.</b><br>Para un polo simple en \\( z_0 \\), el residuo es \\( \\lim_{z \\to z_0} (z-z_0)f(z) \\). Si calculamos el residuo en \\( z = i\\alpha \\) para nuestra función, ¿qué obtenemos?',
+            options: [
+                '\\( \\frac{e^{-\\alpha}}{2i\\alpha^2} \\)',
+                '\\( \\frac{e^{-\\alpha}}{-2\\alpha^2} \\)',
+                '\\( \\frac{e^{\\alpha}}{-2\\alpha^2} \\)'
+            ],
+            correct: 1,
+            feedback: '¡Perfecto! Al multiplicar por \\( (z-i\\alpha) \\) y evaluar en \\( i\\alpha \\), queda \\( \\frac{e^{i(i\\alpha)}}{i\\alpha(i\\alpha + i\\alpha)} = \\frac{e^{-\\alpha}}{i\\alpha(2i\\alpha)} = \\frac{e^{-\\alpha}}{-2\\alpha^2} \\). Multiplicado por \\( 2\\pi i \\), la integral total del contorno es \\( -i\\pi \\frac{e^{-\\alpha}}{\\alpha^2} \\).'
+        },
+        {
+            type: 'quiz',
+            text: '<b>Paso 5: El arco pequeño \\( C_r \\).</b><br>Al esquivar el polo en \\( z=0 \\) por arriba en sentido horario, usamos el Teorema del Residuo Fraccionario. La contribución de la integral sobre \\( C_r \\) cuando \\( r \\to 0 \\) es \\( -i\\pi \\cdot \\operatorname{Res}(f, 0) \\). Como \\( \\operatorname{Res}(f,0) = \\frac{1}{\\alpha^2} \\), ese límite da \\( -\\frac{i\\pi}{\\alpha^2} \\). Sabiendo que el arco gigante da 0, juntamos todo:<br> \\( \\int_{-\\infty}^\\infty \\frac{e^{ix}}{x(x^2+\\alpha^2)} dx - \\frac{i\\pi}{\\alpha^2} = -i\\pi \\frac{e^{-\\alpha}}{\\alpha^2} \\). <br>Si despejamos la integral y tomamos la **parte imaginaria**, obtenemos la integral de \\( -\\infty \\) a \\( \\infty \\). ¿Qué falta para llegar a la respuesta final del parcial?',
+            options: [
+                'Sumarle la parte real.',
+                'Dividir por 2, ya que la función integrando \\( \\frac{\\operatorname{sen}(x)}{x(x^2+\\alpha^2)} \\) es par, y nos piden de 0 a \\( \\infty \\).',
+                'Multiplicar por \\( e^{i\\alpha} \\).'
+            ],
+            correct: 1,
+            feedback: '¡Espectacular! Resolviste un ejercicio de final/parcial completo. Despejando, la integral en toda la recta da \\( i\\pi \\frac{1-e^{-\\alpha}}{\\alpha^2} \\). Su parte imaginaria es \\( \\pi \\frac{1-e^{-\\alpha}}{\\alpha^2} \\). Como te piden de 0 a \\( \\infty \\), dividís por 2: Respuesta final: \\( \\frac{\\pi}{2\\alpha^2}(1-e^{-\\alpha}) \\). ∎'
         }
     ];
-
     let currentLesson = 0;
 
     function renderLesson() {
