@@ -126,37 +126,61 @@
     const lessons = [
         {
             type: 'info',
-            text: '¡Bienvenido a CauchyLingo! En Análisis Complejo, una función \\( f(z) = u(x,y) + iv(x,y) \\) es <b>holomorfa</b> (derivable) si cumple las Ecuaciones de Cauchy-Riemann.',
-            options: ['¡Entendido!'],
+            text: '<b>Módulo: Cauchy-Riemann Nivel Parcial.</b><br>Ya sabemos que si \\( f(z) = u + iv \\) es holomorfa, entonces \\( u_x = v_y \\) y \\( u_y = -v_x \\). Pero en la FCEyN esto se usa para cosas más profundas. ¡Vamos a deducir!',
+            options: ['Arrancar'],
             correct: 0,
-            feedback: 'Las ecuaciones son: \\( u_x = v_y \\) y \\( u_y = -v_x \\).'
+            feedback: 'Asegurate de tener papel y lápiz a mano para estos.'
         },
         {
             type: 'quiz',
-            text: 'Dada la función \\( f(z) = x^2 - y^2 + i(2xy) \\). ¿Quiénes son \\( u \\) y \\( v \\)?',
+            text: '<b>Armónicas Conjugadas:</b> Sea \\( u(x,y) = x^3 - 3xy^2 \\). Sabemos que es la parte real de una función entera \\( f(z) = u + iv \\). Usando Cauchy-Riemann, ¿cuál de las siguientes es su armónica conjugada \\( v(x,y) \\)?',
             options: [
-                '\\( u = 2xy \\) , \\( v = x^2 - y^2 \\)',
-                '\\( u = x^2 - y^2 \\) , \\( v = 2xy \\)'
+                '\\( v(x,y) = -3x^2y + y^3 + C \\)',
+                '\\( v(x,y) = 3x^2y - y^3 + C \\)',
+                '\\( v(x,y) = 3x^2y + y^3 + C \\)'
             ],
             correct: 1,
-            feedback: '¡Exacto! \\( u \\) es la parte real y \\( v \\) es la parte imaginaria (la que multiplica a \\( i \\)).'
+            feedback: '¡Exacto! Como \\( u_x = 3x^2 - 3y^2 = v_y \\), integrando respecto a \\( y \\) da \\( v = 3x^2y - y^3 + h(x) \\). Usando la otra ecuación de C-R se deduce que \\( h\'(x) = 0 \\).'
         },
         {
             type: 'quiz',
-            text: 'Para la función anterior, calculemos las derivadas parciales. ¿Cuánto vale \\( u_x \\) y \\( v_y \\)?',
+            text: '<b>Geometría (Ideal para Data Science):</b> Si escribimos los gradientes como \\( \\nabla u = (u_x, u_y) \\) y \\( \\nabla v = (v_x, v_y) \\). Si \\( f=u+iv \\) es holomorfa y \\( f\'(z) \\neq 0 \\), ¿qué relación geométrica tienen las curvas de nivel de \\( u \\) y \\( v \\)?',
             options: [
-                '\\( u_x = 2x \\) , \\( v_y = 2x \\)',
-                '\\( u_x = 2x \\) , \\( v_y = -2y \\)'
+                'Son siempre paralelas (el producto cruz es cero).',
+                'El ángulo entre ellas depende de \\( z \\).',
+                'Son ortogonales (su producto interno \\( \\nabla u \\cdot \\nabla v = 0 \\)).'
             ],
-            correct: 0,
-            feedback: '¡Correcto! Como \\( u_x = v_y = 2x \\), se cumple la primera ecuación de Cauchy-Riemann.'
+            correct: 2,
+            feedback: '¡Bien! \\( \\nabla u \\cdot \\nabla v = u_x v_x + u_y v_y = u_x(-u_y) + u_y(u_x) = 0 \\). Esto significa que las redes de partes reales e imaginarias forman grillas ortogonales.'
         },
         {
             type: 'info',
-            text: 'El Ejercicio 1 de tu parcial menciona que la imagen de \\( f \\) está en una curva de nivel de \\( \\varphi \\). Esto significa que \\( \\varphi(u(x,y), v(x,y)) = k \\). ¡Se usa la regla de la cadena multivariable!',
-            options: ['Tiene sentido, sigamos.'],
+            text: '<br>Visualmente, si mapeas las curvas donde \\( u=cte \\) y \\( v=cte \\), siempre se cruzan a 90 grados. Esta propiedad preservadora de ángulos se llama <b>Mapeo Conforme</b> y es brutal para transformar dominios en Machine Learning geométrico.',
+            options: ['Entendido, vamos al ejercicio del parcial'],
             correct: 0,
-            feedback: 'Combinando la regla de la cadena con Cauchy-Riemann, se demuestra que \\( f \\) debe ser constante.'
+            feedback: 'Preparate para aplicar regla de la cadena.'
+        },
+        {
+            type: 'quiz',
+            text: '<b>El Ejercicio 1 de tu Parcial:</b> Tienes \\( f=u+iv \\) holomorfa y \\( \\varphi(u,v) = k \\) (curva de nivel). Te piden probar que \\( f \\) es constante. Al derivar \\( \\varphi(u(x,y), v(x,y)) = k \\) respecto a \\( x \\) e \\( y \\), obtienes: <br> 1) \\( \\varphi_u u_x + \\varphi_v v_x = 0 \\)<br> 2) \\( \\varphi_u u_y + \\varphi_v v_y = 0 \\)<br>¿Cuál es el siguiente paso lógico usando Cauchy-Riemann?',
+            options: [
+                'Integrar ambas ecuaciones respecto a \\( x \\) e \\( y \\).',
+                'Reemplazar \\( v_x, v_y \\) por \\( u_x, u_y \\) para armar un sistema homogéneo donde las incógnitas son \\( \\varphi_u, \\varphi_v \\).',
+                'Aplicar el Teorema de Liouville porque la curva está acotada.'
+            ],
+            correct: 1,
+            feedback: '¡Clave! Al reemplazar te queda un sistema matricial de 2x2. ¡Vamos a verlo en el siguiente paso!'
+        },
+        {
+            type: 'quiz',
+            text: '<b>Resolviendo el Parcial (Final):</b> El sistema matricial te queda con matriz de coeficientes \\( A = \\begin{pmatrix} u_x & -u_y \\\\ u_y & u_x \\end{pmatrix} \\) multiplicada por el vector \\( (\\varphi_u, \\varphi_v)^T = (0,0)^T \\). El enunciado dice que \\( \\nabla \\varphi \\neq \\vec{0} \\). ¿Qué implica esto sobre el determinante de \\( A \\)?',
+            options: [
+                'Que el determinante debe ser nulo, es decir \\( (u_x)^2 + (u_y)^2 = 0 \\).',
+                'Que el determinante debe ser distinto de cero.',
+                'Que la traza de la matriz es cero.'
+            ],
+            correct: 0,
+            feedback: '¡Bingo, resolviste el parcial! Si el gradiente de \\( \\varphi \\) no es nulo, el sistema homogéneo tiene solución no trivial. Por Álgebra Lineal (¡que la tenés clarísima!), el determinante de \\( A \\) debe ser 0. Como \\( det(A) = |f\'(z)|^2 \\), entonces \\( f\'(z) = 0 \\) en todo el dominio. Ergo, \\( f \\) es constante. ∎'
         }
     ];
 
