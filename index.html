@@ -13,6 +13,7 @@
             --bg-color: #ffffff;
             --text-color: #3c3c3c;
             --gray-light: #e5e5e5;
+            --tab-bg: #f0f0f0;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,189 +28,278 @@
         .app-container {
             background-color: var(--bg-color);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            height: 85vh;
             border-radius: 15px;
-            padding: 30px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 15px;
-            background-color: var(--gray-light);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            min-height: 80px;
-        }
-        .options-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            overflow: hidden;
+            position: relative;
         }
-        .option-btn {
+        /* Header y Botón Volver */
+        .header {
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #afafaf;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+        .back-btn:hover { color: var(--text-color); }
+        .title { font-weight: bold; font-size: 1.2rem; }
+        
+        /* Contenedores de Vistas */
+        .view {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+        }
+        .view.active { display: block; }
+
+        /* Estilos del Menú de Módulos */
+        .module-btn {
+            width: 100%;
             background-color: white;
             border: 2px solid var(--gray-light);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-        .option-btn:hover {
-            background-color: #f0f0f0;
-        }
-        .option-btn.correct {
-            background-color: #d7ffb8;
-            border-color: var(--primary);
-            color: var(--primary-dark);
-        }
-        .option-btn.incorrect {
-            background-color: #ffdfe0;
-            border-color: #ea2b2b;
-            color: #ea2b2b;
-        }
-        .feedback {
-            margin-top: 20px;
-            font-weight: bold;
-            min-height: 24px;
-        }
-        .next-btn {
-            margin-top: 20px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 12px;
             font-size: 1.1rem;
-            cursor: pointer;
             font-weight: bold;
-            display: none;
-            width: 100%;
+            cursor: pointer;
+            margin-bottom: 15px;
+            text-align: left;
+            transition: 0.2s;
+        }
+        .module-btn:hover { border-color: var(--primary); }
+
+        /* Estilos de las Lecciones */
+        .progress-bar {
+            width: 100%; height: 12px; background-color: var(--gray-light);
+            border-radius: 10px; margin-bottom: 20px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background-color: var(--primary);
+            width: 0%; transition: width 0.3s ease;
+        }
+        .question-text { font-size: 1.1rem; margin-bottom: 20px; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn {
+            background-color: white; border: 2px solid var(--gray-light);
+            padding: 15px; border-radius: 10px; font-size: 1rem;
+            cursor: pointer; text-align: left; transition: all 0.2s;
+        }
+        .option-btn:hover { background-color: #f9f9f9; }
+        .option-btn.correct { background-color: #d7ffb8; border-color: var(--primary); color: var(--primary-dark); }
+        .option-btn.incorrect { background-color: #ffdfe0; border-color: #ea2b2b; color: #ea2b2b; }
+        .feedback { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .next-btn {
+            margin-top: 20px; background-color: var(--primary); color: white;
+            border: none; padding: 15px; border-radius: 10px; font-size: 1.1rem;
+            cursor: pointer; font-weight: bold; display: none; width: 100%;
             border-bottom: 4px solid var(--primary-dark);
         }
-        .next-btn:active {
-            transform: translateY(2px);
-            border-bottom: 2px solid var(--primary-dark);
+
+        /* Estilos del Glosario */
+        .def-card {
+            background-color: #f9f9f9; border-left: 4px solid var(--primary);
+            padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0;
         }
+        .def-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
+        .def-card p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+
+        /* Navegación Inferior */
+        .bottom-nav {
+            display: flex; border-top: 2px solid var(--gray-light);
+            background-color: white;
+        }
+        .nav-btn {
+            flex: 1; padding: 15px; border: none; background: none;
+            font-size: 1rem; font-weight: bold; color: #afafaf; cursor: pointer;
+        }
+        .nav-btn.active { color: var(--primary); border-top: 3px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="progress-bar">
-        <div class="progress-fill" id="progress"></div>
-    </div>
-    
-    <div id="lesson-content">
-        <div class="question-text" id="question">Cargando lección...</div>
-        <div class="options-container" id="options"></div>
+    <div class="header">
+        <button class="back-btn" id="back-btn" onclick="showMenu()">← Volver</button>
+        <div class="title" id="header-title">Módulos</div>
+        <div style="width: 60px;"></div> </div>
+
+    <div id="view-menu" class="view active">
+        <button class="module-btn" onclick="startModule(0)">Módulo 1: Ecuaciones de Cauchy-Riemann</button>
+        <button class="module-btn" onclick="startModule(1)">Módulo 2: Residuos e Integrales Impropías</button>
     </div>
 
-    <div class="feedback" id="feedback"></div>
-    <button class="next-btn" id="next-btn" onclick="nextLesson()">CONTINUAR</button>
+    <div id="view-lesson" class="view">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div id="lesson-content">
+            <div class="question-text" id="question">Cargando...</div>
+            <div class="options-container" id="options"></div>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextLesson()">CONTINUAR</button>
+    </div>
+
+    <div id="view-glossary" class="view">
+        <div class="def-card">
+            <h3>Función Holomorfa</h3>
+            <p>Una función \\( f: \Omega \to \mathbb{C} \\) es holomorfa en el abierto \\( \Omega \\) si es derivable en sentido complejo en cada punto. Implica infinitas derivadas (analiticidad).</p>
+        </div>
+        <div class="def-card">
+            <h3>Singularidad Aislada</h3>
+            <p>Un punto \\( z_0 \\) donde \\( f \\) no es holomorfa, pero sí lo es en un anillo perforado \\( 0 < |z - z_0| < R \\). Se clasifican en: evitables, polos y esenciales.</p>
+        </div>
+        <div class="def-card">
+            <h3>Residuo \\( \operatorname{Res}(f, z_0) \\)</h3>
+            <p>Es el coeficiente \\( a_{-1} \\) de la Serie de Laurent de \\( f \\) alrededor de \\( z_0 \\). Para un polo simple, se calcula como \\( \lim_{z \to z_0} (z-z_0)f(z) \\).</p>
+        </div>
+        <div class="def-card">
+            <h3>Lema de Jordan</h3>
+            <p>Si \\( f(z) \to 0 \\) cuando \\( |z| \to \infty \\) en el semiplano superior, entonces \\( \int_{C_R} f(z) e^{iaz} dz \to 0 \\) para \\( a > 0 \\) y arcos semicirculares \\( C_R \\).</p>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn active" id="nav-modules" onclick="switchTab('menu')">Módulos</button>
+        <button class="nav-btn" id="nav-glossary" onclick="switchTab('glossary')">Definiciones</button>
+    </div>
 </div>
 
 <script>
-    // Nuestra "Base de datos" de lecciones. Empezamos con Holomorfía y Cauchy-Riemann (Tema del Parcial 1)
-    const lessons = [
-        {
-            type: 'info',
-            text: '<b>Módulo 2: Teorema de los Residuos.</b><br>El teorema dice que si tienes una curva cerrada simple \\( \\gamma \\), la integral de una función holomorfa sobre ella es \\( 2\\pi i \\) por la suma de los "residuos" de las singularidades que quedaron atrapadas adentro.',
-            options: ['¡A integrar!'],
-            correct: 0,
-            feedback: 'El residuo es simplemente el coeficiente \\( a_{-1} \\) del desarrollo de Laurent alrededor de la singularidad.'
-        },
-        {
-            type: 'info',
-            text: '<b>CONSIGNA DEL SEGUNDO PARCIAL (26/11/2025) - Ejercicio 1:</b><br><br>Sea \\( \\alpha > 0 \\). Calcular la integral impropia:<br><br> \\( \\displaystyle \\int_0^\\infty \\frac{\\operatorname{sen}(x)}{x(x^2 + \\alpha^2)} dx \\)<br><br><i>Sugerencia: Puede ser útil considerar el contorno dado por medio anillo \\( A(0, r, R) \\) en el semiplano superior (incluyendo los bordes) con \\( 0 < r < R \\).</i>',
-            options: ['Leída y anotada'],
-            correct: 0,
-            feedback: 'Vamos a desglosar este "monstruo" paso a paso usando variables complejas.'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Paso 1: Elegir la función compleja.</b><br>Para integrar senos y cosenos en la recta real usando complejos, NO usamos \\( f(z) = \\frac{\\operatorname{sen}(z)}{z(z^2+\\alpha^2)} \\). En su lugar, usamos \\( f(z) = \\frac{e^{iz}}{z(z^2+\\alpha^2)} \\) y luego tomamos la parte imaginaria. ¿Por qué hacemos esto?',
-            options: [
-                'Porque \\( \\operatorname{sen}(z) \\) no es holomorfa en el plano complejo.',
-                'Porque \\( e^{iz} \\) está acotada en el semiplano superior (\\( y > 0 \\)), mientras que \\( \\operatorname{sen}(z) \\) crece exponencialmente.',
-                'Porque \\( e^{iz} \\) no tiene singularidades, simplificando el cálculo de los residuos.'
-            ],
-            correct: 1,
-            feedback: '¡Exacto! Como \\( z = x + iy \\), entonces \\( e^{iz} = e^{ix}e^{-y} \\). Si \\( y > 0 \\), el término \\( e^{-y} \\) decae, lo que nos permite usar el Lema de Jordan para que la integral en el arco exterior gigante dé cero. \\( \\operatorname{sen}(z) \\) tiene términos \\( e^{y} \\) que explotan.'
-        },
-        {
-            type: 'info',
-            text: '<b>Paso 2: Visualizar el contorno.</b><br>La sugerencia te pide un medio anillo. . <br>Esto nos da 4 caminos:<br>1. Eje real de \\( -R \\) a \\( -r \\)<br>2. Semicírculo chiquito \\( C_r \\) esquivando el origen (sentido horario)<br>3. Eje real de \\( r \\) a \\( R \\)<br>4. Semicírculo gigante \\( C_R \\) (sentido antihorario).',
-            options: ['Entendido, la suma da el total adentro'],
-            correct: 0,
-            feedback: 'Como \\( R \\to \\infty \\) y \\( r \\to 0 \\), los tramos 1 y 3 formarán nuestra integral impropia de \\( -\\infty \\) a \\( \\infty \\).'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Paso 3: Singularidades y Residuos.</b><br>Nuestra función es \\( f(z) = \\frac{e^{iz}}{z(z-i\\alpha)(z+i\\alpha)} \\). Tenemos polos simples en \\( z=0 \\), \\( z=i\\alpha \\) y \\( z=-i\\alpha \\). ¿Cuál de ellos está **adentro** de nuestro contorno en el semiplano superior?',
-            options: [
-                'Solo \\( z = 0 \\)',
-                'Solo \\( z = i\\alpha \\)',
-                'Ambos \\( z = 0 \\) y \\( z = i\\alpha \\)'
-            ],
-            correct: 1,
-            feedback: '¡Bien! El origen \\( z=0 \\) lo dejamos afuera a propósito esquivándolo con el arco \\( C_r \\). El polo \\( -i\\alpha \\) está en el semiplano inferior. Así que solo nos importa \\( i\\alpha \\).'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Paso 4: Calcular el residuo.</b><br>Para un polo simple en \\( z_0 \\), el residuo es \\( \\lim_{z \\to z_0} (z-z_0)f(z) \\). Si calculamos el residuo en \\( z = i\\alpha \\) para nuestra función, ¿qué obtenemos?',
-            options: [
-                '\\( \\frac{e^{-\\alpha}}{2i\\alpha^2} \\)',
-                '\\( \\frac{e^{-\\alpha}}{-2\\alpha^2} \\)',
-                '\\( \\frac{e^{\\alpha}}{-2\\alpha^2} \\)'
-            ],
-            correct: 1,
-            feedback: '¡Perfecto! Al multiplicar por \\( (z-i\\alpha) \\) y evaluar en \\( i\\alpha \\), queda \\( \\frac{e^{i(i\\alpha)}}{i\\alpha(i\\alpha + i\\alpha)} = \\frac{e^{-\\alpha}}{i\\alpha(2i\\alpha)} = \\frac{e^{-\\alpha}}{-2\\alpha^2} \\). Multiplicado por \\( 2\\pi i \\), la integral total del contorno es \\( -i\\pi \\frac{e^{-\\alpha}}{\\alpha^2} \\).'
-        },
-        {
-            type: 'quiz',
-            text: '<b>Paso 5: El arco pequeño \\( C_r \\).</b><br>Al esquivar el polo en \\( z=0 \\) por arriba en sentido horario, usamos el Teorema del Residuo Fraccionario. La contribución de la integral sobre \\( C_r \\) cuando \\( r \\to 0 \\) es \\( -i\\pi \\cdot \\operatorname{Res}(f, 0) \\). Como \\( \\operatorname{Res}(f,0) = \\frac{1}{\\alpha^2} \\), ese límite da \\( -\\frac{i\\pi}{\\alpha^2} \\). Sabiendo que el arco gigante da 0, juntamos todo:<br> \\( \\int_{-\\infty}^\\infty \\frac{e^{ix}}{x(x^2+\\alpha^2)} dx - \\frac{i\\pi}{\\alpha^2} = -i\\pi \\frac{e^{-\\alpha}}{\\alpha^2} \\). <br>Si despejamos la integral y tomamos la **parte imaginaria**, obtenemos la integral de \\( -\\infty \\) a \\( \\infty \\). ¿Qué falta para llegar a la respuesta final del parcial?',
-            options: [
-                'Sumarle la parte real.',
-                'Dividir por 2, ya que la función integrando \\( \\frac{\\operatorname{sen}(x)}{x(x^2+\\alpha^2)} \\) es par, y nos piden de 0 a \\( \\infty \\).',
-                'Multiplicar por \\( e^{i\\alpha} \\).'
-            ],
-            correct: 1,
-            feedback: '¡Espectacular! Resolviste un ejercicio de final/parcial completo. Despejando, la integral en toda la recta da \\( i\\pi \\frac{1-e^{-\\alpha}}{\\alpha^2} \\). Su parte imaginaria es \\( \\pi \\frac{1-e^{-\\alpha}}{\\alpha^2} \\). Como te piden de 0 a \\( \\infty \\), dividís por 2: Respuesta final: \\( \\frac{\\pi}{2\\alpha^2}(1-e^{-\\alpha}) \\). ∎'
-        }
+    const modulesData = [
+        // MÓDULO 1 (Tu código anterior resumido para espacio)
+        [
+            {
+                type: 'info', text: 'Repaso rápido de Cauchy-Riemann: \\( u_x = v_y \\) y \\( u_y = -v_x \\).',
+                options: ['Empezar'], correct: 0, feedback: '¡Vamos!'
+            },
+            {
+                type: 'quiz', text: 'Si \\( f=u+iv \\) es holomorfa, ¿qué relación geométrica tienen \\( \\nabla u \\) y \\( \\nabla v \\)?',
+                options: ['Paralelos', 'Ortogonales (Producto interno 0)', 'Depende de z'],
+                correct: 1, feedback: '¡Correcto! Forman mallas ortogonales.'
+            }
+        ],
+        // MÓDULO 2: RESIDUOS Y TEORÍA PREVIA AL PARCIAL
+        [
+            {
+                type: 'info', text: '<b>1. Singularidades:</b> Antes de integrar, necesitamos saber qué "rompe" a la función. Un <b>polo de orden m</b> en \\( z_0 \\) ocurre si \\( \lim_{z \to z_0} (z-z_0)^m f(z) = L \neq 0 \\).',
+                options: ['Entendido'], correct: 0, feedback: 'Si \\( m=1 \\), es un polo simple.'
+            },
+            {
+                type: 'quiz', text: '<b>2. Identificando polos:</b> Observa la función del parcial: \\( f(z) = \\frac{e^{iz}}{z(z^2+\\alpha^2)} \\) con \\( \\alpha > 0 \\). ¿Cuáles son sus singularidades y de qué tipo?',
+                options: [
+                    '\\( 0, \\alpha, -\\alpha \\) (Polos simples)',
+                    '\\( 0, i\\alpha, -i\\alpha \\) (Polos simples)',
+                    '\\( i\\alpha \\) (Polo doble) y \\( 0 \\) (Polo simple)'
+                ],
+                correct: 1, feedback: '¡Exacto! El denominador se anula en \\( z=0 \\) y resolviendo \\( z^2 = -\\alpha^2 \\) obtenemos \\( \\pm i\\alpha \\).'
+            },
+            {
+                type: 'quiz', text: '<b>3. Cálculo de Residuos:</b> Por definición, para un polo simple en \\( z_0 \\), \\( \\operatorname{Res}(f, z_0) = \\lim_{z \to z_0} (z-z_0)f(z) \\). Calcula \\( \\operatorname{Res}(f, i\\alpha) \\) para nuestra función.',
+                options: [
+                    '\\( \\frac{e^{-\\alpha}}{-2\\alpha^2} \\)',
+                    '\\( \\frac{e^{i\\alpha}}{2i\\alpha^2} \\)'
+                ],
+                correct: 0, feedback: '¡Bien! Multiplicas por \\( (z-i\\alpha) \\), simplificas el denominador a \\( z(z+i\\alpha) \\) y evalúas en \\( i\\alpha \\). Da \\( \\frac{e^{-\\alpha}}{i\\alpha(2i\\alpha)} = \\frac{e^{-\\alpha}}{-2\\alpha^2} \\).'
+            },
+            {
+                type: 'info', text: '<b>4. Teorema de los Residuos de Cauchy:</b> Si tienes una curva cerrada simple \\( \\gamma \\) recorrida en sentido antihorario, la integral es \\( 2\\pi i \\sum \\operatorname{Res}(f, z_k) \\) para los polos interiores.',
+                options: ['Anotado'], correct: 0, feedback: 'Esta es la ecuación maestra.'
+            },
+            {
+                type: 'quiz', text: '<b>5. Lema de Jordan (Controlando el infinito):</b> Para integrar en la recta real, cerramos el contorno con un semicírculo gigante \\( C_R \\) en el semiplano superior (\\( y > 0 \\)). Si usamos \\( f(z) = \\frac{\\operatorname{sen}(z)}{...} \\) el módulo explota porque contiene \\( e^{-iy} \\). ¿Qué función auxiliar elegimos para que la integral sobre \\( C_R \\) se anule por Jordan?',
+                options: [
+                    '\\( \\cos(z) \\)',
+                    '\\( e^{iz} \\)',
+                    '\\( e^{-iz} \\)'
+                ],
+                correct: 1, feedback: '¡Clave! \\( |e^{iz}| = |e^{i(x+iy)}| = e^{-y} \\). Como \\( y > 0 \\), esto decae a cero. Al final del ejercicio, tomaremos la parte imaginaria de nuestro resultado.'
+            },
+            {
+                type: 'info', text: '<b>6. Teorema del Residuo Fraccionario (El polo en el eje):</b>  Nuestro contorno debe esquivar el origen (polo en \\( z=0 \\)) con un semicírculo pequeño \\( C_r \\) de radio \\( r \\). Como lo recorremos en sentido horario (media vuelta), su contribución al límite es \\( -i\\pi \\operatorname{Res}(f, 0) \\).',
+                options: ['Comprendido, arma el rompecabezas'], correct: 0, feedback: 'Calcula mentalmente: \\( \\operatorname{Res}(f, 0) = \\frac{1}{\\alpha^2} \\).'
+            },
+            {
+                type: 'quiz', text: '<b>7. El Ejercicio del Parcial:</b> Ensamblamos todo. Integral Eje Real + Integral \\( C_R \\) (da 0) + Integral \\( C_r \\) (da \\( -i\\pi/\\alpha^2 \\)) = \\( 2\\pi i \\operatorname{Res}(f, i\\alpha) \\). O sea: <br> \\( \\int_{-\\infty}^\\infty \\frac{e^{ix}}{x(x^2+\\alpha^2)} dx - \\frac{i\\pi}{\\alpha^2} = 2\\pi i (\\frac{e^{-\\alpha}}{-2\\alpha^2}) \\). <br>Despejando y tomando la <b>parte imaginaria</b> (pues queremos el seno), ¿qué obtienes para la integral de \\(-\\infty\\) a \\(\\infty\\)?',
+                options: [
+                    '\\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\)',
+                    '\\( \\frac{2\\pi}{\\alpha^2}(1+e^{-\\alpha}) \\)'
+                ],
+                correct: 0, feedback: '¡Excelente! Queda \\( i\\pi/\\alpha^2 - i\\pi e^{-\\alpha}/\\alpha^2 \\). Su parte imaginaria es \\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\).'
+            },
+            {
+                type: 'quiz', text: '<b>8. El toque final (Paridad):</b> El enunciado te pide la integral impropia de <b>\\( 0 \\) a \\( \\infty \\)</b>. Sabiendo que \\( g(x) = \\frac{\\operatorname{sen}(x)}{x(x^2+\\alpha^2)} \\) es una función par, ¿cuál es tu respuesta definitiva para entregar el parcial?',
+                options: [
+                    '\\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\)',
+                    '\\( \\frac{\\pi}{2\\alpha^2}(1-e^{-\\alpha}) \\)'
+                ],
+                correct: 1, feedback: '¡Felicitaciones! Acabas de resolver de forma impecable y justificada un ejercicio de 25 puntos del segundo parcial.'
+            }
+        ]
     ];
+
+    let currentModuleIndex = -1;
     let currentLesson = 0;
 
+    // Control de Vistas
+    function switchTab(tab) {
+        document.getElementById('view-menu').classList.remove('active');
+        document.getElementById('view-lesson').classList.remove('active');
+        document.getElementById('view-glossary').classList.remove('active');
+        document.getElementById('nav-modules').classList.remove('active');
+        document.getElementById('nav-glossary').classList.remove('active');
+        document.getElementById('back-btn').style.display = 'none';
+
+        if (tab === 'menu') {
+            document.getElementById('view-menu').classList.add('active');
+            document.getElementById('nav-modules').classList.add('active');
+            document.getElementById('header-title').innerText = 'Módulos';
+        } else if (tab === 'glossary') {
+            document.getElementById('view-glossary').classList.add('active');
+            document.getElementById('nav-glossary').classList.add('active');
+            document.getElementById('header-title').innerText = 'Definiciones';
+        }
+    }
+
+    function showMenu() {
+        currentModuleIndex = -1;
+        switchTab('menu');
+    }
+
+    // Lógica de Lecciones
+    function startModule(index) {
+        currentModuleIndex = index;
+        currentLesson = 0;
+        document.getElementById('view-menu').classList.remove('active');
+        document.getElementById('view-lesson').classList.add('active');
+        document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('header-title').innerText = 'Módulo ' + (index + 1);
+        renderLesson();
+    }
+
     function renderLesson() {
-        const lesson = lessons[currentLesson];
-        const questionEl = document.getElementById('question');
+        const lesson = modulesData[currentModuleIndex][currentLesson];
+        document.getElementById('question').innerHTML = lesson.text;
         const optionsEl = document.getElementById('options');
-        const feedbackEl = document.getElementById('feedback');
-        const nextBtn = document.getElementById('next-btn');
-
-        // Actualizar UI
-        questionEl.innerHTML = lesson.text;
         optionsEl.innerHTML = '';
-        feedbackEl.innerHTML = '';
-        nextBtn.style.display = 'none';
+        document.getElementById('feedback').innerHTML = '';
+        document.getElementById('next-btn').style.display = 'none';
 
-        // Barra de progreso
-        const progress = (currentLesson / lessons.length) * 100;
+        const progress = (currentLesson / modulesData[currentModuleIndex].length) * 100;
         document.getElementById('progress').style.width = progress + '%';
 
-        // Generar botones
         lesson.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
@@ -217,33 +307,26 @@
             btn.onclick = () => checkAnswer(index, btn);
             optionsEl.appendChild(btn);
         });
-
-        // Re-renderizar las matemáticas de LaTeX
         MathJax.typesetPromise();
     }
 
     function checkAnswer(selectedIndex, btnElement) {
-        const lesson = lessons[currentLesson];
-        const feedbackEl = document.getElementById('feedback');
-        const nextBtn = document.getElementById('next-btn');
+        const lesson = modulesData[currentModuleIndex][currentLesson];
         const allBtns = document.querySelectorAll('.option-btn');
-
-        // Deshabilitar botones después de responder
         allBtns.forEach(b => b.disabled = true);
 
         if (selectedIndex === lesson.correct) {
             btnElement.classList.add('correct');
-            feedbackEl.innerHTML = '✅ ' + lesson.feedback;
-            feedbackEl.style.color = 'var(--primary-dark)';
-            nextBtn.style.display = 'block';
+            document.getElementById('feedback').innerHTML = '✅ ' + lesson.feedback;
+            document.getElementById('feedback').style.color = 'var(--primary-dark)';
+            document.getElementById('next-btn').style.display = 'block';
         } else {
             btnElement.classList.add('incorrect');
-            feedbackEl.innerHTML = '❌ Inténtalo de nuevo.';
-            feedbackEl.style.color = '#ea2b2b';
-            // Permitir volver a intentar después de un segundo
+            document.getElementById('feedback').innerHTML = '❌ Inténtalo de nuevo.';
+            document.getElementById('feedback').style.color = '#ea2b2b';
             setTimeout(() => {
                 btnElement.classList.remove('incorrect');
-                feedbackEl.innerHTML = '';
+                document.getElementById('feedback').innerHTML = '';
                 allBtns.forEach(b => b.disabled = false);
             }, 1500);
         }
@@ -252,18 +335,15 @@
 
     function nextLesson() {
         currentLesson++;
-        if (currentLesson < lessons.length) {
+        if (currentLesson < modulesData[currentModuleIndex].length) {
             renderLesson();
         } else {
-            document.getElementById('lesson-content').innerHTML = '<h2>¡Módulo completado! 🎉</h2><p>Ya dominas lo básico de Cauchy-Riemann.</p>';
+            document.getElementById('lesson-content').innerHTML = '<h2>¡Módulo completado! 🎉</h2><p>Dominaste la teoría y la práctica.</p>';
             document.getElementById('feedback').innerHTML = '';
             document.getElementById('next-btn').style.display = 'none';
             document.getElementById('progress').style.width = '100%';
         }
     }
-
-    // Iniciar app
-    window.onload = renderLesson;
 </script>
 
 </body>
