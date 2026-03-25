@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CauchyLingo - Análisis Complejo</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #58cc02;
+            --primary-dark: #46a302;
+            --bg-color: #ffffff;
+            --text-color: #3c3c3c;
+            --gray-light: #e5e5e5;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .app-container {
+            background-color: var(--bg-color);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            min-height: 80px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .option-btn {
+            background-color: white;
+            border: 2px solid var(--gray-light);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .option-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .option-btn.correct {
+            background-color: #d7ffb8;
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+        .option-btn.incorrect {
+            background-color: #ffdfe0;
+            border-color: #ea2b2b;
+            color: #ea2b2b;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+        .next-btn {
+            margin-top: 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+            width: 100%;
+            border-bottom: 4px solid var(--primary-dark);
+        }
+        .next-btn:active {
+            transform: translateY(2px);
+            border-bottom: 2px solid var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+    
+    <div id="lesson-content">
+        <div class="question-text" id="question">Cargando lección...</div>
+        <div class="options-container" id="options"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextLesson()">CONTINUAR</button>
+</div>
+
+<script>
+    // Nuestra "Base de datos" de lecciones. Empezamos con Holomorfía y Cauchy-Riemann (Tema del Parcial 1)
+    const lessons = [
+        {
+            type: 'info',
+            text: '¡Bienvenido a CauchyLingo! En Análisis Complejo, una función \\( f(z) = u(x,y) + iv(x,y) \\) es <b>holomorfa</b> (derivable) si cumple las Ecuaciones de Cauchy-Riemann.',
+            options: ['¡Entendido!'],
+            correct: 0,
+            feedback: 'Las ecuaciones son: \\( u_x = v_y \\) y \\( u_y = -v_x \\).'
+        },
+        {
+            type: 'quiz',
+            text: 'Dada la función \\( f(z) = x^2 - y^2 + i(2xy) \\). ¿Quiénes son \\( u \\) y \\( v \\)?',
+            options: [
+                '\\( u = 2xy \\) , \\( v = x^2 - y^2 \\)',
+                '\\( u = x^2 - y^2 \\) , \\( v = 2xy \\)'
+            ],
+            correct: 1,
+            feedback: '¡Exacto! \\( u \\) es la parte real y \\( v \\) es la parte imaginaria (la que multiplica a \\( i \\)).'
+        },
+        {
+            type: 'quiz',
+            text: 'Para la función anterior, calculemos las derivadas parciales. ¿Cuánto vale \\( u_x \\) y \\( v_y \\)?',
+            options: [
+                '\\( u_x = 2x \\) , \\( v_y = 2x \\)',
+                '\\( u_x = 2x \\) , \\( v_y = -2y \\)'
+            ],
+            correct: 0,
+            feedback: '¡Correcto! Como \\( u_x = v_y = 2x \\), se cumple la primera ecuación de Cauchy-Riemann.'
+        },
+        {
+            type: 'info',
+            text: 'El Ejercicio 1 de tu parcial menciona que la imagen de \\( f \\) está en una curva de nivel de \\( \\varphi \\). Esto significa que \\( \\varphi(u(x,y), v(x,y)) = k \\). ¡Se usa la regla de la cadena multivariable!',
+            options: ['Tiene sentido, sigamos.'],
+            correct: 0,
+            feedback: 'Combinando la regla de la cadena con Cauchy-Riemann, se demuestra que \\( f \\) debe ser constante.'
+        }
+    ];
+
+    let currentLesson = 0;
+
+    function renderLesson() {
+        const lesson = lessons[currentLesson];
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Actualizar UI
+        questionEl.innerHTML = lesson.text;
+        optionsEl.innerHTML = '';
+        feedbackEl.innerHTML = '';
+        nextBtn.style.display = 'none';
+
+        // Barra de progreso
+        const progress = (currentLesson / lessons.length) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+
+        // Generar botones
+        lesson.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsEl.appendChild(btn);
+        });
+
+        // Re-renderizar las matemáticas de LaTeX
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        const lesson = lessons[currentLesson];
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const allBtns = document.querySelectorAll('.option-btn');
+
+        // Deshabilitar botones después de responder
+        allBtns.forEach(b => b.disabled = true);
+
+        if (selectedIndex === lesson.correct) {
+            btnElement.classList.add('correct');
+            feedbackEl.innerHTML = '✅ ' + lesson.feedback;
+            feedbackEl.style.color = 'var(--primary-dark)';
+            nextBtn.style.display = 'block';
+        } else {
+            btnElement.classList.add('incorrect');
+            feedbackEl.innerHTML = '❌ Inténtalo de nuevo.';
+            feedbackEl.style.color = '#ea2b2b';
+            // Permitir volver a intentar después de un segundo
+            setTimeout(() => {
+                btnElement.classList.remove('incorrect');
+                feedbackEl.innerHTML = '';
+                allBtns.forEach(b => b.disabled = false);
+            }, 1500);
+        }
+        MathJax.typesetPromise();
+    }
+
+    function nextLesson() {
+        currentLesson++;
+        if (currentLesson < lessons.length) {
+            renderLesson();
+        } else {
+            document.getElementById('lesson-content').innerHTML = '<h2>¡Módulo completado! 🎉</h2><p>Ya dominas lo básico de Cauchy-Riemann.</p>';
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('progress').style.width = '100%';
+        }
+    }
+
+    // Iniciar app
+    window.onload = renderLesson;
+</script>
+
+</body>
+</html>
