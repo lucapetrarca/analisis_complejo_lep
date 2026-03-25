@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CauchyLingo - Análisis Complejo</title>
+    <script>
+    MathJax = {
+      tex: {inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]'], ['$$', '$$']]}
+    };
+    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -46,39 +51,23 @@
             justify-content: space-between;
         }
         .back-btn {
-            background: none;
-            border: none;
-            color: #afafaf;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
+            background: none; border: none; color: #afafaf;
+            font-size: 1rem; font-weight: bold; cursor: pointer; display: none;
         }
         .back-btn:hover { color: var(--text-color); }
         .title { font-weight: bold; font-size: 1.2rem; }
         
         /* Contenedores de Vistas */
         .view {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: none;
+            flex-grow: 1; padding: 20px; overflow-y: auto; display: none;
         }
         .view.active { display: block; }
 
         /* Estilos del Menú de Módulos */
         .module-btn {
-            width: 100%;
-            background-color: white;
-            border: 2px solid var(--gray-light);
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 15px;
-            text-align: left;
-            transition: 0.2s;
+            width: 100%; background-color: white; border: 2px solid var(--gray-light);
+            padding: 20px; border-radius: 12px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; margin-bottom: 15px; text-align: left; transition: 0.2s;
         }
         .module-btn:hover { border-color: var(--primary); }
 
@@ -88,15 +77,14 @@
             border-radius: 10px; margin-bottom: 20px; overflow: hidden;
         }
         .progress-fill {
-            height: 100%; background-color: var(--primary);
-            width: 0%; transition: width 0.3s ease;
+            height: 100%; background-color: var(--primary); width: 0%; transition: width 0.3s ease;
         }
         .question-text { font-size: 1.1rem; margin-bottom: 20px; }
         .options-container { display: flex; flex-direction: column; gap: 10px; }
         .option-btn {
             background-color: white; border: 2px solid var(--gray-light);
-            padding: 15px; border-radius: 10px; font-size: 1rem;
-            cursor: pointer; text-align: left; transition: all 0.2s;
+            padding: 15px; border-radius: 10px; font-size: 1rem; cursor: pointer;
+            text-align: left; transition: all 0.2s;
         }
         .option-btn:hover { background-color: #f9f9f9; }
         .option-btn.correct { background-color: #d7ffb8; border-color: var(--primary); color: var(--primary-dark); }
@@ -114,13 +102,17 @@
             background-color: #f9f9f9; border-left: 4px solid var(--primary);
             padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0;
         }
-        .def-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
-        .def-card p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+        .def-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #2c3e50; }
+        .def-card p { margin: 0 0 10px 0; font-size: 0.95rem; line-height: 1.5; }
+        .def-card p:last-child { margin-bottom: 0; }
+        .def-tag {
+            display: inline-block; background: #e0f2f1; color: #00695c;
+            padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px;
+        }
 
         /* Navegación Inferior */
         .bottom-nav {
-            display: flex; border-top: 2px solid var(--gray-light);
-            background-color: white;
+            display: flex; border-top: 2px solid var(--gray-light); background-color: white;
         }
         .nav-btn {
             flex: 1; padding: 15px; border: none; background: none;
@@ -135,7 +127,8 @@
     <div class="header">
         <button class="back-btn" id="back-btn" onclick="showMenu()">← Volver</button>
         <div class="title" id="header-title">Módulos</div>
-        <div style="width: 60px;"></div> </div>
+        <div style="width: 60px;"></div>
+    </div>
 
     <div id="view-menu" class="view active">
         <button class="module-btn" onclick="startModule(0)">Módulo 1: Ecuaciones de Cauchy-Riemann</button>
@@ -153,22 +146,79 @@
     </div>
 
     <div id="view-glossary" class="view">
+        
         <div class="def-card">
-            <h3>Función Holomorfa</h3>
-            <p>Una función \\( f: \Omega \to \mathbb{C} \\) es holomorfa en el abierto \\( \Omega \\) si es derivable en sentido complejo en cada punto. Implica infinitas derivadas (analiticidad).</p>
+            <span class="def-tag">Básico</span>
+            <h3>Función Holomorfa / Entera</h3>
+            <p>Una función \( f: \Omega \to \mathbb{C} \) es <b>holomorfa</b> en el abierto \( \Omega \) si es derivable en sentido complejo en cada punto. Esto implica que tiene infinitas derivadas y se puede desarrollar en serie de Taylor (analiticidad). Si es holomorfa en todo \( \mathbb{C} \), se llama función <b>entera</b>.</p>
         </div>
+
         <div class="def-card">
-            <h3>Singularidad Aislada</h3>
-            <p>Un punto \\( z_0 \\) donde \\( f \\) no es holomorfa, pero sí lo es en un anillo perforado \\( 0 < |z - z_0| < R \\). Se clasifican en: evitables, polos y esenciales.</p>
+            <span class="def-tag">Básico</span>
+            <h3>Ecuaciones de Cauchy-Riemann</h3>
+            <p>Si \( f(z) = u(x,y) + iv(x,y) \) es holomorfa, entonces sus derivadas parciales cumplen: \( u_x = v_y \) y \( u_y = -v_x \). Además, \( u \) y \( v \) son funciones armónicas (\( \Delta u = 0 \)).</p>
         </div>
+
         <div class="def-card">
-            <h3>Residuo \\( \operatorname{Res}(f, z_0) \\)</h3>
-            <p>Es el coeficiente \\( a_{-1} \\) de la Serie de Laurent de \\( f \\) alrededor de \\( z_0 \\). Para un polo simple, se calcula como \\( \lim_{z \to z_0} (z-z_0)f(z) \\).</p>
+            <span class="def-tag">Integración</span>
+            <h3>Teorema de Cauchy-Goursat</h3>
+            <p>Si \( f \) es holomorfa en un dominio simplemente conexo \( \Omega \) y \( \gamma \) es una curva cerrada simple en \( \Omega \), entonces \( \oint_\gamma f(z) dz = 0 \).</p>
         </div>
+
         <div class="def-card">
-            <h3>Lema de Jordan</h3>
-            <p>Si \\( f(z) \to 0 \\) cuando \\( |z| \to \infty \\) en el semiplano superior, entonces \\( \int_{C_R} f(z) e^{iaz} dz \to 0 \\) para \\( a > 0 \\) y arcos semicirculares \\( C_R \\).</p>
+            <span class="def-tag">Integración</span>
+            <h3>Fórmula Integral de Cauchy</h3>
+            <p>Permite evaluar una función dentro de un disco a partir de sus valores en la frontera. Si \( z_0 \) está en el interior de \( \gamma \):<br>
+            \( f(z_0) = \frac{1}{2\pi i} \oint_\gamma \frac{f(z)}{z - z_0} dz \).</p>
         </div>
+
+        <div class="def-card">
+            <span class="def-tag">Teoremas Fuertes</span>
+            <h3>Teorema de Liouville</h3>
+            <p>Toda función <b>entera</b> y <b>acotada</b> en todo el plano complejo es obligatoriamente constante. (Se usa mucho para demostrar el Teorema Fundamental del Álgebra).</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Teoremas Fuertes</span>
+            <h3>Principio del Módulo Máximo</h3>
+            <p>Si \( f \) es holomorfa y no constante en una región, entonces el módulo \( |f(z)| \) no puede alcanzar un máximo local estricto en el interior de la región. El máximo siempre está en la frontera.</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Teoremas Fuertes</span>
+            <h3>Teorema de Rouché</h3>
+            <p>Sean \( f \) y \( g \) holomorfas dentro y sobre una curva cerrada simple \( \gamma \). Si \( |f(z) - g(z)| < |f(z)| \) para todo \( z \) en la frontera \( \gamma \), entonces \( f \) y \( g \) tienen la <b>misma cantidad de ceros</b> (contando multiplicidades) en el interior de \( \gamma \).</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Singularidades</span>
+            <h3>Tipos de Singularidades Aisladas</h3>
+            <p>Sea \( z_0 \) una singularidad aislada de \( f \):<br>
+            <b>1. Evitable:</b> \( \lim_{z \to z_0} f(z) \) existe y es finito.<br>
+            <b>2. Polo de orden m:</b> \( \lim_{z \to z_0} (z-z_0)^m f(z) = c \neq 0 \).<br>
+            <b>3. Esencial:</b> El límite no existe de ninguna forma (ej. \( e^{1/z} \) en \( z=0 \)). Por el <b>Teorema de Casorati-Weierstrass</b>, la imagen de cualquier entorno de una singularidad esencial es densa en \( \mathbb{C} \).</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Integración</span>
+            <h3>Teorema de los Residuos</h3>
+            <p>Sea \( \gamma \) una curva cerrada simple recorrida en sentido antihorario. Si \( f \) es holomorfa en su interior excepto en un conjunto finito de singularidades aisladas \( z_k \), entonces:<br>
+            \( \oint_\gamma f(z) dz = 2\pi i \sum_{k} \operatorname{Res}(f, z_k) \)</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Lemas Útiles</span>
+            <h3>Lemas para Integrales Impropias</h3>
+            <p><b>Lema de Jordan:</b> Si \( \lim_{|z| \to \infty} f(z) = 0 \) en \( y \geq 0 \), entonces \( \int_{C_R} f(z)e^{iaz} dz \to 0 \) (para \( a > 0 \)) cuando \( R \to \infty \).<br>
+            <b>Residuo Fraccionario:</b> La integral sobre un arco de circunferencia de ángulo \( \alpha \) (ej. semicírculo de radio \( r \to 0 \)) alrededor de un polo simple \( z_0 \) aporta \( i \alpha \operatorname{Res}(f, z_0) \).</p>
+        </div>
+
+        <div class="def-card">
+            <span class="def-tag">Geometría</span>
+            <h3>Mapeo Conforme / Biholomorfismo</h3>
+            <p>Una función holomorfa y biyectiva \( f: \Omega_1 \to \Omega_2 \). Como \( f'(z) \neq 0 \), preserva los ángulos (en magnitud y orientación) entre las curvas que se cruzan.</p>
+        </div>
+
     </div>
 
     <div class="bottom-nav">
@@ -179,7 +229,7 @@
 
 <script>
     const modulesData = [
-        // MÓDULO 1 (Tu código anterior resumido para espacio)
+        // MÓDULO 1
         [
             {
                 type: 'info', text: 'Repaso rápido de Cauchy-Riemann: \\( u_x = v_y \\) y \\( u_y = -v_x \\).',
@@ -191,61 +241,19 @@
                 correct: 1, feedback: '¡Correcto! Forman mallas ortogonales.'
             }
         ],
-        // MÓDULO 2: RESIDUOS Y TEORÍA PREVIA AL PARCIAL
+        // MÓDULO 2
         [
             {
-                type: 'info', text: '<b>1. Singularidades:</b> Antes de integrar, necesitamos saber qué "rompe" a la función. Un <b>polo de orden m</b> en \\( z_0 \\) ocurre si \\( \lim_{z \to z_0} (z-z_0)^m f(z) = L \neq 0 \\).',
+                type: 'info', text: '<b>1. Singularidades:</b> Un <b>polo de orden m</b> en \\( z_0 \\) ocurre si \\( \\lim_{z \\to z_0} (z-z_0)^m f(z) = L \\neq 0 \\).',
                 options: ['Entendido'], correct: 0, feedback: 'Si \\( m=1 \\), es un polo simple.'
             },
             {
-                type: 'quiz', text: '<b>2. Identificando polos:</b> Observa la función del parcial: \\( f(z) = \\frac{e^{iz}}{z(z^2+\\alpha^2)} \\) con \\( \\alpha > 0 \\). ¿Cuáles son sus singularidades y de qué tipo?',
+                type: 'quiz', text: '<b>2. Identificando polos:</b> Dada \\( f(z) = \\frac{e^{iz}}{z(z^2+\\alpha^2)} \\) con \\( \\alpha > 0 \\). ¿Cuáles son sus polos?',
                 options: [
-                    '\\( 0, \\alpha, -\\alpha \\) (Polos simples)',
-                    '\\( 0, i\\alpha, -i\\alpha \\) (Polos simples)',
-                    '\\( i\\alpha \\) (Polo doble) y \\( 0 \\) (Polo simple)'
+                    '\\( 0, \\alpha, -\\alpha \\)',
+                    '\\( 0, i\\alpha, -i\\alpha \\) (Todos simples)'
                 ],
-                correct: 1, feedback: '¡Exacto! El denominador se anula en \\( z=0 \\) y resolviendo \\( z^2 = -\\alpha^2 \\) obtenemos \\( \\pm i\\alpha \\).'
-            },
-            {
-                type: 'quiz', text: '<b>3. Cálculo de Residuos:</b> Por definición, para un polo simple en \\( z_0 \\), \\( \\operatorname{Res}(f, z_0) = \\lim_{z \to z_0} (z-z_0)f(z) \\). Calcula \\( \\operatorname{Res}(f, i\\alpha) \\) para nuestra función.',
-                options: [
-                    '\\( \\frac{e^{-\\alpha}}{-2\\alpha^2} \\)',
-                    '\\( \\frac{e^{i\\alpha}}{2i\\alpha^2} \\)'
-                ],
-                correct: 0, feedback: '¡Bien! Multiplicas por \\( (z-i\\alpha) \\), simplificas el denominador a \\( z(z+i\\alpha) \\) y evalúas en \\( i\\alpha \\). Da \\( \\frac{e^{-\\alpha}}{i\\alpha(2i\\alpha)} = \\frac{e^{-\\alpha}}{-2\\alpha^2} \\).'
-            },
-            {
-                type: 'info', text: '<b>4. Teorema de los Residuos de Cauchy:</b> Si tienes una curva cerrada simple \\( \\gamma \\) recorrida en sentido antihorario, la integral es \\( 2\\pi i \\sum \\operatorname{Res}(f, z_k) \\) para los polos interiores.',
-                options: ['Anotado'], correct: 0, feedback: 'Esta es la ecuación maestra.'
-            },
-            {
-                type: 'quiz', text: '<b>5. Lema de Jordan (Controlando el infinito):</b> Para integrar en la recta real, cerramos el contorno con un semicírculo gigante \\( C_R \\) en el semiplano superior (\\( y > 0 \\)). Si usamos \\( f(z) = \\frac{\\operatorname{sen}(z)}{...} \\) el módulo explota porque contiene \\( e^{-iy} \\). ¿Qué función auxiliar elegimos para que la integral sobre \\( C_R \\) se anule por Jordan?',
-                options: [
-                    '\\( \\cos(z) \\)',
-                    '\\( e^{iz} \\)',
-                    '\\( e^{-iz} \\)'
-                ],
-                correct: 1, feedback: '¡Clave! \\( |e^{iz}| = |e^{i(x+iy)}| = e^{-y} \\). Como \\( y > 0 \\), esto decae a cero. Al final del ejercicio, tomaremos la parte imaginaria de nuestro resultado.'
-            },
-            {
-                type: 'info', text: '<b>6. Teorema del Residuo Fraccionario (El polo en el eje):</b>  Nuestro contorno debe esquivar el origen (polo en \\( z=0 \\)) con un semicírculo pequeño \\( C_r \\) de radio \\( r \\). Como lo recorremos en sentido horario (media vuelta), su contribución al límite es \\( -i\\pi \\operatorname{Res}(f, 0) \\).',
-                options: ['Comprendido, arma el rompecabezas'], correct: 0, feedback: 'Calcula mentalmente: \\( \\operatorname{Res}(f, 0) = \\frac{1}{\\alpha^2} \\).'
-            },
-            {
-                type: 'quiz', text: '<b>7. El Ejercicio del Parcial:</b> Ensamblamos todo. Integral Eje Real + Integral \\( C_R \\) (da 0) + Integral \\( C_r \\) (da \\( -i\\pi/\\alpha^2 \\)) = \\( 2\\pi i \\operatorname{Res}(f, i\\alpha) \\). O sea: <br> \\( \\int_{-\\infty}^\\infty \\frac{e^{ix}}{x(x^2+\\alpha^2)} dx - \\frac{i\\pi}{\\alpha^2} = 2\\pi i (\\frac{e^{-\\alpha}}{-2\\alpha^2}) \\). <br>Despejando y tomando la <b>parte imaginaria</b> (pues queremos el seno), ¿qué obtienes para la integral de \\(-\\infty\\) a \\(\\infty\\)?',
-                options: [
-                    '\\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\)',
-                    '\\( \\frac{2\\pi}{\\alpha^2}(1+e^{-\\alpha}) \\)'
-                ],
-                correct: 0, feedback: '¡Excelente! Queda \\( i\\pi/\\alpha^2 - i\\pi e^{-\\alpha}/\\alpha^2 \\). Su parte imaginaria es \\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\).'
-            },
-            {
-                type: 'quiz', text: '<b>8. El toque final (Paridad):</b> El enunciado te pide la integral impropia de <b>\\( 0 \\) a \\( \\infty \\)</b>. Sabiendo que \\( g(x) = \\frac{\\operatorname{sen}(x)}{x(x^2+\\alpha^2)} \\) es una función par, ¿cuál es tu respuesta definitiva para entregar el parcial?',
-                options: [
-                    '\\( \\frac{\\pi}{\\alpha^2}(1-e^{-\\alpha}) \\)',
-                    '\\( \\frac{\\pi}{2\\alpha^2}(1-e^{-\\alpha}) \\)'
-                ],
-                correct: 1, feedback: '¡Felicitaciones! Acabas de resolver de forma impecable y justificada un ejercicio de 25 puntos del segundo parcial.'
+                correct: 1, feedback: '¡Exacto! El denominador se anula en 0 y en \\( \\pm i\\alpha \\).'
             }
         ]
     ];
@@ -253,7 +261,6 @@
     let currentModuleIndex = -1;
     let currentLesson = 0;
 
-    // Control de Vistas
     function switchTab(tab) {
         document.getElementById('view-menu').classList.remove('active');
         document.getElementById('view-lesson').classList.remove('active');
@@ -270,6 +277,13 @@
             document.getElementById('view-glossary').classList.add('active');
             document.getElementById('nav-glossary').classList.add('active');
             document.getElementById('header-title').innerText = 'Definiciones';
+            
+            // LA MAGIA ESTÁ ACÁ: Forzar a MathJax a compilar el Glosario al abrir la pestaña
+            if (window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('view-glossary')]).catch(function (err) {
+                    console.log('Error en MathJax: ' + err.message);
+                });
+            }
         }
     }
 
@@ -278,7 +292,6 @@
         switchTab('menu');
     }
 
-    // Lógica de Lecciones
     function startModule(index) {
         currentModuleIndex = index;
         currentLesson = 0;
@@ -307,7 +320,11 @@
             btn.onclick = () => checkAnswer(index, btn);
             optionsEl.appendChild(btn);
         });
-        MathJax.typesetPromise();
+        
+        // Renderizar la lección activa
+        if (window.MathJax) {
+            MathJax.typesetPromise([document.getElementById('view-lesson')]);
+        }
     }
 
     function checkAnswer(selectedIndex, btnElement) {
@@ -330,7 +347,10 @@
                 allBtns.forEach(b => b.disabled = false);
             }, 1500);
         }
-        MathJax.typesetPromise();
+        
+        if (window.MathJax) {
+            MathJax.typesetPromise([document.getElementById('feedback')]);
+        }
     }
 
     function nextLesson() {
@@ -344,6 +364,13 @@
             document.getElementById('progress').style.width = '100%';
         }
     }
+
+    // Renderizar lo que esté visible al cargar la página por primera vez
+    window.onload = function() {
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    };
 </script>
 
 </body>
